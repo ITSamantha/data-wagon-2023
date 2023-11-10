@@ -3,6 +3,24 @@ from flask import Flask, request
 app = Flask(__name__)
 app.debug = True
 
+response = {
+    "success": True,
+    "stations": [
+        {"longitude": 53.87,
+         "latitude": 66.32,
+         "id": 15,
+         }
+    ],
+    "network":
+        [
+            {
+                "from": 15,
+                "to": 24,
+                "dist": 16.8
+            }
+        ]
+}
+
 
 @app.route('/')
 def index():
@@ -14,7 +32,7 @@ def api():
     return 'api'
 
 
-@app.route('/api/stations/', methods=['GET', 'POST'])
+@app.route('/api/stations/', methods=['GET'])
 def api_station():
     if request.method == 'GET':
         longitude = request.args.get('longitude')
@@ -28,23 +46,7 @@ def api_station():
         latitude = data.get('latitude')
         radius = data.get('radius')
 
-    response = {
-        "success": True,
-        "stations": [
-            {"longitude": 53.87,
-             "latitude": 66.32,
-             "id": 15,
-             }
-        ],
-        "network":
-            [
-                {
-                    "from": 15,
-                    "to": 24,
-                    "dist": 16.8
-                }
-            ]
-    }
+    return response
 
 
 if __name__ == "__main__":

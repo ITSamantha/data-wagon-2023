@@ -1,2 +1,5 @@
 venv
 .idea
+simulator/*.xlsx
+simulator/*.csv
+simulator/__pycache__
