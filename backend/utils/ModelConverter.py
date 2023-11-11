@@ -1,3 +1,4 @@
+from backend.models.Destination import DestinationTrain
 from backend.models.Road import Road
 from backend.models.Station import Station
 
@@ -15,4 +16,11 @@ def stationToDict(station: Station):
         "longitude": station.longitude,
         "latitude": station.latitude,
         "id": station.st_id
+    }
+
+
+def trainDestinationToDict(dest: DestinationTrain):
+    return {
+        "station": dest.st_id,
+        "time": dest.oper_date
     }

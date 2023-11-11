@@ -34,8 +34,12 @@ def api_station():
     radius = request.args.get('radius')
     return r.getStationsJson(longitude, latitude, radius)
 
+@app.route('/api/train_destinations/', methods=['GET'])
+def get_train_destinations():
+    train_id = request.args.get('train_id')
+    return r.getDestinationsByTrainId(train_id)
 
-@app.route('/add_dest', methods=['POST'])
+@app.route('/api/add_dest', methods=['POST'])
 def add_destination():
     input_json = dict(request.form)
     print(input_json)

@@ -3,7 +3,7 @@ import datetime
 import psycopg2
 
 from backend.database import DatabaseScripts
-from backend.models.Destination import Destination
+from backend.models.Destination import Destination, DestinationTrain
 from backend.models.Road import Road
 from backend.models.Station import Station
 
@@ -216,6 +216,28 @@ class Dao:
         )
         self.__disconnect(cursor)
         return station
+
+    def getDestinationsByTrainId(self, train_id):
+        destinations = list()
+        cursor = self.__connect()
+
+        cursor.execute(
+            DatabaseScripts.selectDestinationsByTrain,
+            (
+                train_id, train_id
+            )
+        )
+        rows = cursor.fetchall()
+        for row in rows:
+            destinations.append(
+                DestinationTrain(
+                    oper_date=row[0],
+                    st_id=row[1]
+                )
+            )
+
+        self.__disconnect(cursor)
+        return destinations
 
     def __disconnect(self, cursor):
         self.__conn.commit()

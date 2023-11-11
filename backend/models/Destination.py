@@ -21,3 +21,14 @@ class Destination:
         self.disl_st_id = disl_st_id
         self.oper_date = oper_date
         self.wag_id = wag_id
+
+
+class DestinationTrain:
+    def __init__(
+            self,
+            oper_date: datetime,
+            st_id: int
+    ):
+        self.st_id = st_id
+        self.oper_date = oper_date
+

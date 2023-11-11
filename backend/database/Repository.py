@@ -73,3 +73,12 @@ class Repository:
 
     def addDestination(self, destination):
         self.__dao.insertDestination(destination)
+
+    def getDestinationsByTrainId(self, train_id):
+        destinations = self.__dao.getDestinationsByTrainId(train_id=train_id)
+        dest_dicts=list()
+        for destination in destinations:
+            dest_dicts.append(
+                ModelConverter.trainDestinationToDict(destination)
+            )
+        return json.dumps(dest_dicts, indent=2)

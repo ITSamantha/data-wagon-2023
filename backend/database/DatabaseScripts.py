@@ -54,3 +54,20 @@ INSERT INTO public."Destinations"(
 	VALUES ( 
 	%s, %s, %s, %s, %s, %s, %s);
 	'''
+
+selectDestinationsByTrain = '''
+
+select  oper_date, 
+disl_st_id
+
+ from public."Destinations" 
+where train_id = %s and oper_date >= (
+SELECT  oper_date FROM public."Destinations"
+where train_id = %s AND disl_st_id = form_st_id 
+order by oper_date DESC LIMIT 1)
+GROUP BY oper_date,  disl_st_id
+order by oper_date ASC 
+;
+
+
+'''
