@@ -33,7 +33,7 @@ CREATE INDEX IF NOT EXISTS idx_stations_pk
     ON public."Stations" USING btree
     (st_id ASC NULLS LAST)
     TABLESPACE pg_default;
-    
+
  -- Table: public.Roads
 
 -- DROP TABLE IF EXISTS public."Roads";
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS public."Roads"
     start_id integer,
     end_id integer,
     len integer,
-    id integer NOT NULL DEFAULT nextval('"Roads_id_seq"'::regclass),
+    id serial,
     CONSTRAINT pk_roads PRIMARY KEY (id),
     CONSTRAINT fk_end_id FOREIGN KEY (end_id)
         REFERENCES public."Stations" (st_id) MATCH SIMPLE
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS public."Destinations"
     disl_st_id integer,
     dest_st_id integer,
     train_id character varying COLLATE pg_catalog."default",
-    id integer NOT NULL DEFAULT nextval('"Destination_id_seq"'::regclass),
+    id serial,
     form_st_id integer,
     target_st_id integer,
     CONSTRAINT pk_dest PRIMARY KEY (id),
