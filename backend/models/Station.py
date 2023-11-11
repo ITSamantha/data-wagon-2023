@@ -8,3 +8,6 @@ class Station:
         self.st_id = st_id
         self.latitude = latitude
         self.longitude = longitude
+
+    def __eq__(self, other):
+        return self.st_id == other
