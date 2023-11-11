@@ -32,3 +32,12 @@ class DestinationTrain:
         self.st_id = st_id
         self.oper_date = oper_date
 
+
+class DestinationTrainResponse:
+    def __init__(
+            self,
+            oper_date: str,
+            st_id: int
+    ):
+        self.st_id = st_id
+        self.oper_date = oper_date

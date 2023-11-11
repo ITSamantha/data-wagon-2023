@@ -54,18 +54,21 @@ def add_destination():
     target_st_id = train_index[2]
 
     date = datetime.datetime.strptime(oper_date, '%Y-%m-%d %H:%M:%S')
-    r.addDestination(
-        Destination(
-            wag_id=int(wag_id),
-            oper_date=date,
-            disl_st_id=int(disl_id),
-            dest_st_id=int(dest_id),
-            train_id=int(train_id),
-            form_st_id=int(form_st_id),
-            target_st_id=int(target_st_id),
-            id=0
+    try:
+        r.addDestination(
+            Destination(
+                wag_id=int(wag_id),
+                oper_date=date,
+                disl_st_id=int(disl_id),
+                dest_st_id=int(dest_id),
+                train_id=int(train_id),
+                form_st_id=int(form_st_id),
+                target_st_id=int(target_st_id),
+                id=0
+            )
         )
-    )
+    except:
+        pass
 
     response = {'success': True}
     return response
@@ -73,3 +76,4 @@ def add_destination():
 
 if __name__ == "__main__":
    app.run()
+

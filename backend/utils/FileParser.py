@@ -1,5 +1,7 @@
+import time
 from datetime import datetime
 
+import pandas
 import pandas as pd
 
 from backend.database.Dao import Dao
@@ -48,13 +50,19 @@ def getStations(dir_name):
 
 
 def __getDestinationsFromLine(line):
-    # date = datetime.strptime(
-    #     line.iloc[1],
-    #     "%d.%m.%Y %h:%m:%s"
-    # )
 
-    date = datetime.fromtimestamp(line[1])
-    train_info = line.iloc[4].strip('-')
+    timestamp: pandas.Timestamp = line.iloc[1]
+    date = datetime(
+        year=timestamp.year,
+        month=timestamp.month,
+        day=timestamp.day,
+        hour=timestamp.hour,
+        minute=timestamp.minute,
+        second=timestamp.second
+    )
+
+    train_info = str(line.iloc[4]).split("-")
+    print(train_info)
     train_id = train_info[1]
     form_st_id = train_info[0]
     target_st_id = train_info[2]
@@ -78,7 +86,11 @@ def getDestinations(dir_name):
     for sheet_name in reader.sheet_names:
         sheet = reader.parse(sheet_name)
         for row in sheet.iloc:
-            destinations.append(__getDestinationsFromLine(row))
+            try:
+                destinations.append(__getDestinationsFromLine(row))
+            except:
+                pass
+        break
     return destinations
 
 

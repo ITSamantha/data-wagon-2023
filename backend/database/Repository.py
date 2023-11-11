@@ -1,6 +1,8 @@
+import datetime
 import json
 
 from backend.database.Dao import Dao
+from backend.models.Destination import DestinationTrain, DestinationTrainResponse
 from backend.models.Road import Road
 from backend.utils import FileParser, ModelConverter
 
@@ -70,15 +72,63 @@ class Repository:
 
         return json.dumps(json_data, indent=2)
 
-
     def addDestination(self, destination):
         self.__dao.insertDestination(destination)
 
+    def getDateTimeForPeople(self, d: datetime.datetime):
+        return d.strftime('%d.%m.%Y %H:%M:%S')
+
+    def makeTimeRangeForDest(self, destinations: list):
+        count_dests = len(destinations)
+        if count_dests == 0:
+            return destinations
+
+        newDestinations = list()
+        timeFrom = destinations[0].oper_date
+        curr_st_id = destinations[0].st_id
+
+        for i in range(1, count_dests):
+            dest = destinations[i]
+            if (curr_st_id != dest.st_id):
+                timeRange = self.getDateTimeForPeople(timeFrom) + ' - ' + self.getDateTimeForPeople(dest.oper_date)
+                newDestinations.append(
+                    DestinationTrainResponse(
+                        timeRange,
+                        curr_st_id
+                    )
+                )
+                curr_st_id = dest.st_id
+                timeFrom = dest.oper_date
+                if count_dests - 1 == i:
+                    newDestinations.append(
+                        DestinationTrainResponse(
+                            self.getDateTimeForPeople(timeFrom),
+                            curr_st_id
+                        )
+                    )
+            else:
+                if count_dests - 1 == i:
+                    timeRange = self.getDateTimeForPeople(timeFrom) + ' - ' + self.getDateTimeForPeople(dest.oper_date)
+                    newDestinations.append(
+                        DestinationTrainResponse(
+                            timeRange,
+                            curr_st_id
+                        )
+                    )
+
+        return newDestinations
+
     def getDestinationsByTrainId(self, train_id):
         destinations = self.__dao.getDestinationsByTrainId(train_id=train_id)
-        dest_dicts=list()
+        destinations = self.makeTimeRangeForDest(destinations)
+        dest_dicts = list()
         for destination in destinations:
             dest_dicts.append(
-                ModelConverter.trainDestinationToDict(destination)
+                ModelConverter.trainDestinationResponseToDict(destination)
             )
         return json.dumps(dest_dicts, indent=2)
+
+    def parseDestinations(self, file_name):
+        destinations = FileParser.getDestinations(file_name)
+        for destination in destinations:
+            self.addDestination(destination)

@@ -30,18 +30,21 @@ class Dao:
         )
 
     def __insertOneDestination(self, cursor, destination: Destination):
-        cursor.execute(
-            DatabaseScripts.insertDestQuery,
-            (
-                destination.wag_id,
-                destination.oper_date,
-                destination.disl_st_id,
-                destination.dest_st_id,
-                destination.train_id,
-                destination.form_st_id,
-                destination.target_st_id,
+        try:
+            cursor.execute(
+                DatabaseScripts.insertDestQuery,
+                (
+                    destination.wag_id,
+                    destination.oper_date,
+                    destination.disl_st_id,
+                    destination.dest_st_id,
+                    destination.train_id,
+                    destination.form_st_id,
+                    destination.target_st_id,
+                )
             )
-        )
+        except:
+            pass
 
     def insertDestination(self, destination: Destination):
         curs = self.__connect()
