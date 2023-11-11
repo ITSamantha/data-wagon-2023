@@ -9,7 +9,68 @@ CREATE DATABASE wagon_db
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 
- -- Table: public.Destinations
+ -- Table: public.Stations
+
+-- DROP TABLE IF EXISTS public."Stations";
+
+CREATE TABLE IF NOT EXISTS public."Stations"
+(
+    st_id integer NOT NULL,
+    latitude real,
+    longitude real,
+    CONSTRAINT pk_stations PRIMARY KEY (st_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Stations"
+    OWNER to postgres;
+-- Index: idx_stations_pk
+
+-- DROP INDEX IF EXISTS public.idx_stations_pk;
+
+CREATE INDEX IF NOT EXISTS idx_stations_pk
+    ON public."Stations" USING btree
+    (st_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+    
+ -- Table: public.Roads
+
+-- DROP TABLE IF EXISTS public."Roads";
+
+CREATE TABLE IF NOT EXISTS public."Roads"
+(
+    start_id integer,
+    end_id integer,
+    len integer,
+    id integer NOT NULL DEFAULT nextval('"Roads_id_seq"'::regclass),
+    CONSTRAINT pk_roads PRIMARY KEY (id),
+    CONSTRAINT fk_end_id FOREIGN KEY (end_id)
+        REFERENCES public."Stations" (st_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_start_id FOREIGN KEY (start_id)
+        REFERENCES public."Stations" (st_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Roads"
+    OWNER to postgres;
+-- Index: idx_roads_0
+
+-- DROP INDEX IF EXISTS public.idx_roads_0;
+
+CREATE INDEX IF NOT EXISTS idx_roads_0
+    ON public."Roads" USING btree
+    (start_id ASC NULLS LAST, end_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+
+    -- Table: public.Destinations
 
 -- DROP TABLE IF EXISTS public."Destinations";
 
@@ -45,63 +106,4 @@ ALTER TABLE IF EXISTS public."Destinations"
 CREATE INDEX IF NOT EXISTS idx_dest_date
     ON public."Destinations" USING btree
     (oper_date ASC NULLS LAST)
-    TABLESPACE pg_default;
-
- -- Table: public.Roads
-
--- DROP TABLE IF EXISTS public."Roads";
-
-CREATE TABLE IF NOT EXISTS public."Roads"
-(
-    start_id integer,
-    end_id integer,
-    len integer,
-    id integer NOT NULL DEFAULT nextval('"Roads_id_seq"'::regclass),
-    CONSTRAINT pk_roads PRIMARY KEY (id),
-    CONSTRAINT fk_end_id FOREIGN KEY (end_id)
-        REFERENCES public."Stations" (st_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fk_start_id FOREIGN KEY (start_id)
-        REFERENCES public."Stations" (st_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Roads"
-    OWNER to postgres;
--- Index: idx_roads_0
-
--- DROP INDEX IF EXISTS public.idx_roads_0;
-
-CREATE INDEX IF NOT EXISTS idx_roads_0
-    ON public."Roads" USING btree
-    (start_id ASC NULLS LAST, end_id ASC NULLS LAST)
-    TABLESPACE pg_default;
-
--- Table: public.Stations
-
--- DROP TABLE IF EXISTS public."Stations";
-
-CREATE TABLE IF NOT EXISTS public."Stations"
-(
-    st_id integer NOT NULL,
-    latitude real,
-    longitude real,
-    CONSTRAINT pk_stations PRIMARY KEY (st_id)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Stations"
-    OWNER to postgres;
--- Index: idx_stations_pk
-
--- DROP INDEX IF EXISTS public.idx_stations_pk;
-
-CREATE INDEX IF NOT EXISTS idx_stations_pk
-    ON public."Stations" USING btree
-    (st_id ASC NULLS LAST)
     TABLESPACE pg_default;
