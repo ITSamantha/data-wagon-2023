@@ -2,6 +2,7 @@ from datetime import datetime
 
 import pandas as pd
 
+from backend.database.Dao import Dao
 from backend.models.Destination import Destination
 from backend.models.Road import Road
 from backend.models.Station import Station
@@ -14,11 +15,11 @@ def getRoads(dir_name):
 
     sheet = reader.parse("Sheet 1")
     for row in sheet.iloc:
-        roads.append(getRoadFromLine(row))
+        roads.append(__getRoadFromLine(row))
     return roads
 
 
-def getRoadFromLine(line):
+def __getRoadFromLine(line):
     return Road(
         int(line.iloc[0]),
         int(line.iloc[1]),
@@ -27,7 +28,7 @@ def getRoadFromLine(line):
     )
 
 
-def getStationFromLine(line):
+def __getStationFromLine(line):
     return Station(
         int(line.iloc[0]),
         float(line.iloc[1]),
@@ -42,17 +43,17 @@ def getStations(dir_name):
 
     sheet = reader.parse("Sheet 1")
     for row in sheet.iloc:
-        stations.append(getStationFromLine(row))
+        stations.append(__getStationFromLine(row))
     return stations
 
 
-def getDestinationsFromLine(line):
+def __getDestinationsFromLine(line):
     # date = datetime.strptime(
     #     line.iloc[1],
     #     "%d.%m.%Y %h:%m:%s"
     # )
 
-    date =  datetime.fromtimestamp(line.iloc[1])
+    date = datetime.fromtimestamp(line[1])
     train_info = line.iloc[4].strip('-')
     train_id = train_info[0]
     form_st_id = train_info[1]
@@ -77,15 +78,10 @@ def getDestinations(dir_name):
     for sheet_name in reader.sheet_names:
         sheet = reader.parse(sheet_name)
         for row in sheet.iloc:
-            destinations.append(getDestinationsFromLine(row))
+            destinations.append(__getDestinationsFromLine(row))
     return destinations
 
 
 stations_file_name = 'STATION_COORDS_HACKATON.xlsx'
 roads_file_name = 'PEREGON_HACKATON.xlsx'
 dest_file_name = 'disl_hackaton.xlsx'
-
-# HOW TO USE:
-# getRoads / getStations / getDestinations
-# args: dir_name - dir of files, do not rename files!!!
-# example: FileParser.getStations('C:\\Users\\rezan\\Desktop\\')
