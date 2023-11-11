@@ -164,6 +164,39 @@ class Dao:
         self.__disconnect(cursor)
         return stations
 
+    def selectStationsByRadiusWithRoads(
+            self,
+            radius,
+            longitude,
+            latitude
+    ):
+        cursor = self.__connect()
+        cursor.execute(
+            DatabaseScripts.selectStationsByRadiusQuery,
+            (
+                longitude, radius,
+                latitude, radius
+            )
+        )
+        rows = cursor.fetchall()
+        stations_data = {}
+        stations_roads = []
+        for row in rows:
+            stations_data[row[0]] = Station(
+                row[0],
+                row[1],
+                row[2]
+            )
+            stations_roads.append(Road(
+                row[0],
+                row[3],
+                row[4],
+                row[5]
+            ))
+
+        self.__disconnect(cursor)
+        return stations_data.values(), stations_roads
+
     def selectStationsById(
             self,
             st_id

@@ -5,7 +5,8 @@ selectRoadsByStartStationQuery = '''
     WHERE start_id = %s;
 '''
 selectStationsByRadiusQuery = (
-        'SELECT st_id, latitude, longitude FROM public."Stations" '
+        'SELECT st_id, latitude, longitude, end_id, len, public."Roads".id FROM public."Stations" '
+        + 'INNER JOIN public."Roads" ON start_id = st_id '
         + 'WHERE ( '
         + '(ABS(longitude - %s) <= %s )'
         + ' AND '

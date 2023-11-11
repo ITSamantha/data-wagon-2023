@@ -45,33 +45,20 @@ class Repository:
             latitude,
             radius
     ):
-        stations = self.__dao.selectStationsByRadius(
+        stations, roads_dicts = self.__dao.selectStationsByRadiusWithRoads(
             longitude=longitude,
             latitude=latitude,
             radius=radius
         )
 
-        all_roads = list()
-        all_stations = list()
-        all_stations += stations
-
-        for station in stations:
-
-            roads = self.__getRoads(station.st_id)
-            all_roads += roads
-            for road in roads:
-                if road.end_id not in all_stations:
-                    all_stations.append(self.__dao.selectStationsById(road.end_id))
-
         stations_dicts = list()
-
-        for station_model in all_stations:
+        for station_model in stations:
             stations_dicts.append(
                 ModelConverter.stationToDict(station_model)
             )
 
         roads_dicts = list()
-        for roads_model in all_roads:
+        for roads_model in roads_dicts:
             roads_dicts.append(
                 ModelConverter.roadToDict(roads_model)
             )
