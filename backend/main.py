@@ -1,25 +1,20 @@
+import datetime
+import os
+
 from flask import Flask, request
+
+from backend.models.Destination import Destination
+from backend.utils.Bootstrap import bootstrap
+from database.Repository import Repository
 
 app = Flask(__name__)
 app.debug = True
+bootstrap()
 
-response = {
-    "success": True,
-    "stations": [
-        {"longitude": 53.87,
-         "latitude": 66.32,
-         "id": 15,
-         }
-    ],
-    "network":
-        [
-            {
-                "from": 15,
-                "to": 24,
-                "dist": 16.8
-            }
-        ]
-}
+r = Repository(
+    os.getenv('DATABASE_URL'),
+    os.getenv('DATABASE_PASSWORD'),
+)
 
 
 @app.route('/')
@@ -34,20 +29,43 @@ def api():
 
 @app.route('/api/stations/', methods=['GET'])
 def api_station():
-    if request.method == 'GET':
-        longitude = request.args.get('longitude')
-        latitude = request.args.get('latitude')
-        radius = request.args.get('radius')
+    longitude = request.args.get('longitude')
+    latitude = request.args.get('latitude')
+    radius = request.args.get('radius')
+    return r.getStationsJson(longitude, latitude, radius)
 
 
-    elif request.method == 'POST':
-        data = request.json
-        longitude = data.get('longitude')
-        latitude = data.get('latitude')
-        radius = data.get('radius')
+@app.route('/add_dest', methods=['POST'])
+def add_destination():
+    input_json = dict(request.form)
+    print(input_json)
+    wag_id =  input_json['wagnum']
 
+    oper_date =  input_json['operdate']
+    disl_id =  input_json['st_id_disl']
+    dest_id =  input_json['st_id_dest']
+    train_index = str( input_json['train_index']).split('-')
+    train_id = train_index[1]
+    form_st_id = train_index[0]
+    target_st_id = train_index[2]
+
+    date = datetime.datetime.strptime(oper_date, '%Y-%m-%d %H:%M:%S')
+    r.addDestination(
+        Destination(
+            wag_id=int(wag_id),
+            oper_date=date,
+            disl_st_id=int(disl_id),
+            dest_st_id=int(dest_id),
+            train_id=int(train_id),
+            form_st_id=int(form_st_id),
+            target_st_id=int(target_st_id),
+            id=0
+        )
+    )
+
+    response = {'success': True}
     return response
 
 
 if __name__ == "__main__":
-    app.run()
+   app.run()

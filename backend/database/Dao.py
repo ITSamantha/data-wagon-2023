@@ -1,6 +1,9 @@
+import datetime
+
 import psycopg2
 
 from backend.database import DatabaseScripts
+from backend.models.Destination import Destination
 from backend.models.Road import Road
 from backend.models.Station import Station
 
@@ -9,7 +12,7 @@ class Dao:
 
     def __init__(self, config, password):
         self.__conn = None
-        self.__config = config.format(password)
+        self.__config = str(config).format(password)
 
     def __connect(self):
         try:
@@ -25,6 +28,25 @@ class Dao:
                 station.st_id, station.latitude, station.longitude
             )
         )
+
+    def __insertOneDestination(self, cursor, destination: Destination):
+        cursor.execute(
+            DatabaseScripts.insertDestQuery,
+            (
+                destination.wag_id,
+                destination.oper_date,
+                destination.disl_st_id,
+                destination.dest_st_id,
+                destination.train_id,
+                destination.form_st_id,
+                destination.target_st_id,
+            )
+        )
+
+    def insertDestination(self, destination: Destination):
+        curs = self.__connect()
+        self.__insertOneDestination(curs, destination)
+        self.__disconnect(curs)
 
     def deleteAllStations(self):
         curs = self.__connect()

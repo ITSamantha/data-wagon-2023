@@ -14,7 +14,7 @@ class Repository:
         roads = FileParser.getRoads(dir_name)
         correct_roads = list()
         for road in roads:
-            if road.end_id  in stations and road.start_id in stations:
+            if road.end_id in stations and road.start_id in stations:
                 correct_roads.append(road)
 
         self.__dao.insertRoads(correct_roads)
@@ -30,7 +30,7 @@ class Repository:
         self.__loadRoadsFromFileToDb(dir_name)
 
     def __getRoads(self, start_st_id):
-        road_models = self.__dao.selectRoads(start_st_id,)
+        road_models = self.__dao.selectRoads(start_st_id, )
         return road_models
         # road_dicts = list()
         # for roadModel in road_models:
@@ -82,3 +82,7 @@ class Repository:
         }
 
         return json.dumps(json_data, indent=2)
+
+
+    def addDestination(self, destination):
+        self.__dao.insertDestination(destination)

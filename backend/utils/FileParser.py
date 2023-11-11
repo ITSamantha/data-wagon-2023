@@ -55,8 +55,8 @@ def __getDestinationsFromLine(line):
 
     date = datetime.fromtimestamp(line[1])
     train_info = line.iloc[4].strip('-')
-    train_id = train_info[0]
-    form_st_id = train_info[1]
+    train_id = train_info[1]
+    form_st_id = train_info[0]
     target_st_id = train_info[2]
 
     return Destination(

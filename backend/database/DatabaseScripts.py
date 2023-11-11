@@ -46,3 +46,10 @@ selectStationByIdQuery = '''
 	WHERE st_id = %s
 	;
 '''
+
+insertDestQuery = '''
+INSERT INTO public."Destinations"(
+	wag_id, oper_date, disl_st_id, dest_st_id, train_id, form_st_id, target_st_id)
+	VALUES ( 
+	%s, %s, %s, %s, %s, %s, %s);
+	'''
