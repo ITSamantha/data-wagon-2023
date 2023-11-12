@@ -41,3 +41,17 @@ class DestinationTrainResponse:
     ):
         self.st_id = st_id
         self.oper_date = oper_date
+
+
+class ActualDestination:
+    def __init__(
+            self,
+            train_id: int,
+            st_id: int,
+            longitude: float,
+            latitude: float
+    ):
+        self.latitude = latitude
+        self.longitude = longitude
+        self.st_id = st_id
+        self.train_id = train_id

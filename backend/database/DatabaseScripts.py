@@ -36,7 +36,6 @@ deleteStationsQuery = '''
     DELETE FROM public."Stations"
 '''
 
-
 deleteRoadsQuery = '''
     DELETE FROM public."Roads"
 '''
@@ -70,4 +69,18 @@ order by oper_date ASC
 ;
 
 
+'''
+
+selectDestinationsActual = '''
+select 
+distinct on (train_id) 
+max(oper_date) as d, train_id,  disl_st_id as d_id, st.latitude, st.longitude  
+from public."Destinations"
+inner join public."Stations" as st on disl_st_id = st_id
+where oper_date >= (
+select oper_date - interval '12 hours' from public."Destinations"
+order by oper_date DESC LIMIT 1
+	)
+group by  train_id, d_id, st.latitude, st.longitude  
+order by train_id, d DESC
 '''

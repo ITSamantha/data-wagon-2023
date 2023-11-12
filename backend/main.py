@@ -34,21 +34,28 @@ def api_station():
     radius = request.args.get('radius')
     return r.getStationsJson(longitude, latitude, radius)
 
+
 @app.route('/api/train_destinations/', methods=['GET'])
 def get_train_destinations():
     train_id = request.args.get('train_id')
     return r.getDestinationsByTrainId(train_id)
 
+
+@app.route('/api/actual_destinations/', methods=['GET'])
+def get_actual_destinations():
+    return r.getActualDestinations()
+
+
 @app.route('/api/add_dest', methods=['POST'])
 def add_destination():
     input_json = dict(request.form)
     print(input_json)
-    wag_id =  input_json['wagnum']
+    wag_id = input_json['wagnum']
 
-    oper_date =  input_json['operdate']
-    disl_id =  input_json['st_id_disl']
-    dest_id =  input_json['st_id_dest']
-    train_index = str( input_json['train_index']).split('-')
+    oper_date = input_json['operdate']
+    disl_id = input_json['st_id_disl']
+    dest_id = input_json['st_id_dest']
+    train_index = str(input_json['train_index']).split('-')
     train_id = train_index[1]
     form_st_id = train_index[0]
     target_st_id = train_index[2]
@@ -75,5 +82,4 @@ def add_destination():
 
 
 if __name__ == "__main__":
-   app.run()
-
+    app.run()

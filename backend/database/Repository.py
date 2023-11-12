@@ -128,6 +128,15 @@ class Repository:
             )
         return json.dumps(dest_dicts, indent=2)
 
+    def getActualDestinations(self):
+        destinations = self.__dao.getActualDestinations()
+        dest_dicts = list()
+        for destination in destinations:
+            dest_dicts.append(
+                ModelConverter.actualDestToDict(destination)
+            )
+        return json.dumps(dest_dicts, indent=2)
+
     def parseDestinations(self, file_name):
         destinations = FileParser.getDestinations(file_name)
         for destination in destinations:
