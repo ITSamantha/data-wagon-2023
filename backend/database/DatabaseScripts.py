@@ -36,6 +36,7 @@ deleteStationsQuery = '''
     DELETE FROM public."Stations"
 '''
 
+
 deleteRoadsQuery = '''
     DELETE FROM public."Roads"
 '''
@@ -46,6 +47,14 @@ selectStationByIdQuery = '''
 	WHERE st_id = %s
 	;
 '''
+
+selectAllRoadsWithCities = '''
+    SELECT s_start.longitude, s_start.latitude, s_end.longitude, s_end.latitude, s_start.st_id, s_end.st_id FROM public."Roads"
+    INNER JOIN public."Stations" AS s_start ON start_id = s_start.st_id
+    INNER JOIN public."Stations" AS s_end ON end_id = s_end.st_id
+'''
+
+
 
 insertDestQuery = '''
 INSERT INTO public."Destinations"(

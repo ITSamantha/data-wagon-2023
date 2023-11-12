@@ -1,6 +1,6 @@
-from backend.models.Destination import DestinationTrain, DestinationTrainResponse, ActualDestination, ActualWagon
-from backend.models.Road import Road
-from backend.models.Station import Station
+from models.Destination import DestinationTrain, DestinationTrainResponse, ActualDestination, ActualWagon
+from models.Road import Road
+from models.Station import Station
 
 
 def roadToDict(road: Road):

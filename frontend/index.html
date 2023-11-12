@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="theme-color" content="#000000"/>
+    <link rel="stylesheet" href="fonts/index.css"/>
+    <meta name="description" content="Web site created using create-react-app"/>
+    <title>React App</title>
+</head>
+<body>
+<div class="App">
+    <div clas="App__Sidebar">
+
+    </div>
+    <div class="App__Content">
+        <div class="Sidebar">
+            <div class="Sidebar__Wrapper">
+                <h1>Карта движения поездов</h1>
+                <div class="Sidebar__Menu">
+                    <div class="Sidebar__Menu__Item">
+                        <FontAwesomeIcon icon={faSearch}/>
+                    </div>
+                    <div class="Sidebar__Menu__Item">
+                        <FontAwesomeIcon icon={faCalendarAlt}/>
+                    </div>
+                    <div class="Sidebar__Menu__Item">
+                        <FontAwesomeIcon icon={faCalendarAlt}/>
+                    </div>
+                </div>
+            </div>
+            <div class="Sidebar__Content">
+
+                <div class="Sidebar__Search">
+                    <input type="text" placeholder="Введите номер поезда / вагона"/>
+                    <button>Найти</button>
+                </div>
+
+                <div class="Sidebar__Calendar">
+                    <h1>Поезд 007А "Таврия"</h1>
+
+                    <div class="Sidebar__Calendar__Item _active">
+                        <div class="Sidebar__Calendar__Item__Icon"></div>
+                        <div class="Sidebar__Calendar__Item__Content">
+                            <h4>{ el.station }</h4>
+                            <p>{ el.time }</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

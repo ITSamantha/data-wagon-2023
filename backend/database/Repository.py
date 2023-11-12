@@ -1,10 +1,9 @@
 import datetime
 import json
 
-from backend.database.Dao import Dao
-from backend.models.Destination import DestinationTrain, DestinationTrainResponse
-from backend.models.Road import Road
-from backend.utils import FileParser, ModelConverter
+from database.Dao import Dao
+from models.Destination import DestinationTrainResponse
+from utils import FileParser, ModelConverter
 
 
 class Repository:
@@ -16,7 +15,7 @@ class Repository:
         roads = FileParser.getRoads(dir_name)
         correct_roads = list()
         for road in roads:
-            if road.end_id in stations and road.start_id in stations:
+            if road.end_id  in stations and road.start_id in stations:
                 correct_roads.append(road)
 
         self.__dao.insertRoads(correct_roads)
@@ -32,7 +31,7 @@ class Repository:
         self.__loadRoadsFromFileToDb(dir_name)
 
     def __getRoads(self, start_st_id):
-        road_models = self.__dao.selectRoads(start_st_id, )
+        road_models = self.__dao.selectRoads(start_st_id,)
         return road_models
         # road_dicts = list()
         # for roadModel in road_models:
@@ -71,6 +70,9 @@ class Repository:
         }
 
         return json.dumps(json_data, indent=2)
+
+    def getAllRoads(self):
+        return self.__dao.getAllRoads()
 
     def addDestination(self, destination):
         self.__dao.insertDestination(destination)
@@ -142,14 +144,17 @@ class Repository:
         dest_ids = list()
         for destination in destinations:
             dest_ids.append(destination.wag_id)
-        dest_dict = ModelConverter.actualTrainWagonsToDict(
-            train_id,
-            destinations[0].st_id,
-            longitude=destinations[0].longitude,
-            latitude=destinations[0].latitude,
-            wagons=dest_ids
-        )
-        return json.dumps(dest_dict, indent=2)
+
+        if len(destinations) > 0:
+            dest_dict = ModelConverter.actualTrainWagonsToDict(
+                train_id,
+                destinations[0].st_id,
+                longitude=destinations[0].longitude,
+                latitude=destinations[0].latitude,
+                wagons=dest_ids
+            )
+            return json.dumps(dest_dict, indent=2)
+        return json.dumps({}, indent=2)
 
     def parseDestinations(self, file_name):
         destinations = FileParser.getDestinations(file_name)

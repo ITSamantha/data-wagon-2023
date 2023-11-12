@@ -1,18 +1,16 @@
-import datetime
-
 import psycopg2
 
-from backend.database import DatabaseScripts
-from backend.models.Destination import Destination, DestinationTrain, ActualDestination, ActualWagon
-from backend.models.Road import Road
-from backend.models.Station import Station
+from database import DatabaseScripts
+from models.Destination import Destination, DestinationTrain, ActualWagon, ActualDestination
+from models.Road import Road
+from models.Station import Station
 
 
 class Dao:
 
     def __init__(self, config, password):
         self.__conn = None
-        self.__config = str(config).format(password)
+        self.__config = config.format(password)
 
     def __connect(self):
         try:
@@ -20,14 +18,6 @@ class Dao:
             return self.__conn.cursor()
         except:
             print('Connect to DB - ERROR !')
-
-    def __insertOneStation(self, cursor, station: Station):
-        cursor.execute(
-            DatabaseScripts.insertStationsQuery,
-            (
-                station.st_id, station.latitude, station.longitude
-            )
-        )
 
     def __insertOneDestination(self, cursor, destination: Destination):
         try:
@@ -46,10 +36,13 @@ class Dao:
         except:
             pass
 
-    def insertDestination(self, destination: Destination):
-        curs = self.__connect()
-        self.__insertOneDestination(curs, destination)
-        self.__disconnect(curs)
+    def __insertOneStation(self, cursor, station: Station):
+        cursor.execute(
+            DatabaseScripts.insertStationsQuery,
+            (
+                station.st_id, station.latitude, station.longitude
+            )
+        )
 
     def deleteAllStations(self):
         curs = self.__connect()
@@ -64,6 +57,14 @@ class Dao:
             DatabaseScripts.deleteRoadsQuery
         )
         self.__disconnect(curs)
+
+    def getAllRoads(self):
+        cursor = self.__connect()
+        cursor.execute(
+            DatabaseScripts.selectAllRoadsWithCities,
+        )
+        row = cursor.fetchall()
+        return row
 
     def insertStations(self, stations: list):
         curs = self.__connect()
@@ -121,32 +122,6 @@ class Dao:
             roads.append(road)
         self.__disconnect(cursor)
         return roads
-
-    def selectStationsByRadius(
-            self,
-            radius,
-            longitude,
-            latitude
-    ):
-        stations = list()
-        cursor = self.__connect()
-        cursor.execute(
-            DatabaseScripts.selectStationsByRadiusQuery,
-            (
-                longitude, radius,
-                latitude, radius
-            )
-        )
-        rows = cursor.fetchall()
-        for row in rows:
-            station = Station(
-                row[0],
-                row[1],
-                row[2]
-            )
-            stations.append(station)
-        self.__disconnect(cursor)
-        return stations
 
     def selectStations(
             self
@@ -242,6 +217,11 @@ class Dao:
         self.__disconnect(cursor)
         return destinations
 
+    def insertDestination(self, destination: Destination):
+        curs = self.__connect()
+        self.__insertOneDestination(curs, destination)
+        self.__disconnect(curs)
+
     def getActualDestinations(self):
         destinations = list()
         cursor = self.__connect()
@@ -258,7 +238,11 @@ class Dao:
                 )
             )
 
-        self.__disconnect(cursor)
+        try:
+            self.__disconnect(cursor)
+        except:
+            pass
+
         return destinations
 
     def getActualWagons(self, train_id):
@@ -279,7 +263,10 @@ class Dao:
                 )
             )
 
-        self.__disconnect(cursor)
+        try:
+            self.__disconnect(cursor)
+        except:
+            pass
         return destinations
 
     def __disconnect(self, cursor):
