@@ -45,6 +45,11 @@ def get_train_destinations():
 def get_actual_destinations():
     return r.getActualDestinations()
 
+@app.route('/api/actual_wagons/', methods=['GET'])
+def get_actual_wagons():
+    train_id = request.args.get('train_id')
+    return r.getActualWagons(train_id)
+
 
 @app.route('/api/add_dest', methods=['POST'])
 def add_destination():

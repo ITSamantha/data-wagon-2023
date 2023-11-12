@@ -84,3 +84,18 @@ order by oper_date DESC LIMIT 1
 group by  train_id, d_id, st.latitude, st.longitude  
 order by train_id, d DESC
 '''
+selectActualWagons = '''
+select 
+distinct on (wag_id ) 
+ wag_id , disl_st_id as d_id, st.latitude, st.longitude  
+from public."Destinations"
+inner join public."Stations" as st on disl_st_id = st_id
+where oper_date = (
+select max(oper_date)as d1  from public."Destinations" where train_id = %s
+
+	group by train_id  order by d1 DESC LIMIT 1 
+	)
+and train_id = %s
+
+order by wag_id , oper_date DESC
+'''

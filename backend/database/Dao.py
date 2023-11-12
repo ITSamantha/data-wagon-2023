@@ -3,7 +3,7 @@ import datetime
 import psycopg2
 
 from backend.database import DatabaseScripts
-from backend.models.Destination import Destination, DestinationTrain, ActualDestination
+from backend.models.Destination import Destination, DestinationTrain, ActualDestination, ActualWagon
 from backend.models.Road import Road
 from backend.models.Station import Station
 
@@ -255,6 +255,27 @@ class Dao:
                     st_id=row[2],
                     latitude=row[3],
                     longitude=row[4]
+                )
+            )
+
+        self.__disconnect(cursor)
+        return destinations
+
+    def getActualWagons(self, train_id):
+        destinations = list()
+        cursor = self.__connect()
+
+        cursor.execute(DatabaseScripts.selectActualWagons,
+                       (train_id, train_id)
+                       )
+        rows = cursor.fetchall()
+        for row in rows:
+            destinations.append(
+                ActualWagon(
+                    wag_id=row[0],
+                    st_id=row[1],
+                    latitude=row[2],
+                    longitude=row[3]
                 )
             )
 

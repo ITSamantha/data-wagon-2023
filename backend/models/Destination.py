@@ -55,3 +55,17 @@ class ActualDestination:
         self.longitude = longitude
         self.st_id = st_id
         self.train_id = train_id
+
+
+class ActualWagon:
+    def __init__(
+            self,
+            wag_id: int,
+            st_id: int,
+            longitude: float,
+            latitude: float
+    ):
+        self.wag_id = wag_id
+        self.latitude = latitude
+        self.longitude = longitude
+        self.st_id = st_id

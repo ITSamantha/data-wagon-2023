@@ -137,6 +137,20 @@ class Repository:
             )
         return json.dumps(dest_dicts, indent=2)
 
+    def getActualWagons(self, train_id):
+        destinations = self.__dao.getActualWagons(train_id)
+        dest_ids = list()
+        for destination in destinations:
+            dest_ids.append(destination.wag_id)
+        dest_dict = ModelConverter.actualTrainWagonsToDict(
+            train_id,
+            destinations[0].st_id,
+            longitude=destinations[0].longitude,
+            latitude=destinations[0].latitude,
+            wagons=dest_ids
+        )
+        return json.dumps(dest_dict, indent=2)
+
     def parseDestinations(self, file_name):
         destinations = FileParser.getDestinations(file_name)
         for destination in destinations:
